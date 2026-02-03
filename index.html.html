@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shalle on Saturday | The Collection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --gold: #d4af37;
+            --white: #ffffff;
+            --gray: #b0b0b0;
+            --line: rgba(212, 175, 55, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.5;
+        }
+
+        header {
+            height: 40vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            text-transform: uppercase;
+            letter-spacing: 12px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-width: 100%;
+            border-top: 1px solid var(--line);
+        }
+
+        .item {
+            display: flex;
+            height: 550px; 
+            border-bottom: 1px solid var(--line);
+            border-right: 1px solid var(--line);
+            background: #000;
+            overflow: hidden;
+        }
+
+        .item:nth-child(even) { border-right: none; }
+
+        .img-side {
+            flex: 0.5;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .img-side img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            transition: transform 1.5s ease;
+        }
+
+        .item:hover .img-side img {
+            transform: scale(1.1);
+        }
+
+        .text-side {
+            flex: 0.5;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.8rem, 2.5vw, 2.8rem);
+            text-transform: uppercase;
+            line-height: 1.1;
+            margin-bottom: 5px;
+        }
+
+        .eng {
+            color: var(--gold);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .tags {
+            font-size: 0.7rem;
+            color: var(--gold);
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .desc {
+            font-size: 1rem;
+            color: var(--gray);
+            margin-bottom: 30px;
+            font-weight: 300;
+            max-width: 400px;
+        }
+
+        .ing-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--gold);
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+        }
+
+        .ing-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        .ing-list li {
+            font-size: 1rem;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .ing-list li::before {
+            content: "";
+            position: absolute;
+            left: 0; top: 11px;
+            width: 8px; height: 1px;
+            background: var(--gold);
+        }
+
+        .link-btn {
+            display: inline-block;
+            text-decoration: none;
+            color: var(--gold);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: 1px solid var(--line);
+            padding: 12px 20px;
+            width: fit-content;
+            transition: all 0.3s ease;
+        }
+
+        .link-btn:hover {
+            background: var(--gold);
+            color: #000;
+            border-color: var(--gold);
+        }
+
+        @media (max-width: 1024px) {
+            .menu-grid { grid-template-columns: 1fr; }
+            .item { border-right: none; height: auto; flex-direction: column; }
+            .img-side { height: 450px; flex: none; width: 100%; }
+            .text-side { flex: none; width: 100%; padding: 50px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Shalle on<br>Saturday</h1>
+        <p style="color: var(--gold); letter-spacing: 5px; font-size: 0.8rem; margin-top: 15px;">PREMIUM COLLECTION</p>
+    </header>
+
+    <div class="menu-grid">
+        
+        <div class="item">
+            <div class="img-side"><img src="citrus.jpg" alt="Citrus Highball"></div>
+            <div class="text-side">
+                <h2>Цитрус Хайбол</h2>
+                <div class="eng">Citrus Highball</div>
+                <div class="tags">Слабоалкогольный • Сладкий</div>
+                <p class="desc">Яркий микс виски и дюшеса. Идеальная кислинка для субботнего вечера.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list">
+                    <li>Виски</li>
+                    <li>Лимон</li>
+                    <li>Лимонад дюшес</li>
+                    <li>Лед в кубиках</li>
+                </ul>
+                <a href="https://ru.inshaker.com/cocktails/1105-tsitrus-haybol" target="_blank" class="link-btn">Рецепт на Inshaker</a>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="img-side"><img src="WS.jpg" alt="Whisky Sour"></div>
+            <div class="text-side">
+                <h2>Виски Сауэр</h2>
+                <div class="eng">Whisky Sour</div>
+                <div class="tags">Крепкий • Кислый • Сауэр</div>
+                <p class="desc">Безупречный баланс крепости виски, лимонной остроты и шелковистой текстуры белка.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list">
+                    <li>Виски</li>
+                    <li>Ангостура биттер</li>
+                    <li>Сахарный сироп</li>
+                    <li>Лимонный сок</li>
+                    <li>Белок яйца</li>
+                    <li>Лед в кубиках</li>
+                </ul>
+                <a href="https://ru.inshaker.com/cocktails?q=%D0%92%D0%B8%D1%81%D0%BA%D0%B8%20%D1%81%D0%B0%D1%83%D1%8D%D1%80" target="_blank" class="link-btn">Рецепт на Inshaker</a>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="img-side"><img src="DA.jpg" alt="Daiquiri"></div>
+            <div class="text-side">
+                <h2>Дайкири</h2>
+                <div class="eng">Daiquiri</div>
+                <div class="tags">Крепкий • Кислый • Классический</div>
+                <p class="desc">Освежающий кубинский шедевр на основе белого рома с идеальным балансом сладости и лаймовой свежести.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list">
+                    <li>Белый ром</li>
+                    <li>Сахарный сироп</li>
+                    <li>Лаймовый сок</li>
+                    <li>Лед в кубиках</li>
+                </ul>
+                <a href="https://ru.inshaker.com/cocktails/22-daykiri" target="_blank" class="link-btn">Рецепт на Inshaker</a>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="img-side"><img src="MT3.jpg" alt="Pink Mai Tai 3"></div>
+            <div class="text-side">
+                <h2>Май Тай 3</h2>
+                <div class="eng">Pink Mai Tai</div>
+                <div class="tags">Крепкий • Тропический • Фруктовый</div>
+                <p class="desc">Многогранный тропический микс с миндальными нотками и нежным розовым оттенком.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list">
+                    <li>Белый ром</li>
+                    <li>Трипл сек</li>
+                    <li>Миндальный сироп</li>
+                    <li>Гренадин</li>
+                    <li>Лимонный сок</li>
+                    <li>Лед дробленный</li>
+                </ul>
+                <a href="https://ru.inshaker.com/cocktails/553-may-tay-3" target="_blank" class="link-btn">Рецепт на Inshaker</a>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="img-side"><img src="CC.jpg" alt="Clover Club"></div>
+            <div class="text-side">
+                <h2>Кловер Клаб</h2>
+                <div class="eng">Clover Club</div>
+                <div class="tags">Крепкий • Ягодный • Сауэр</div>
+                <p class="desc">Элегантный джиновый сауэр с малиновым характером и нежной протеиновой пеной.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list">
+                    <li>Сухой Джин</li>
+                    <li>Малиновый сироп</li>
+                    <li>Лаймовый сок</li>
+                    <li>Белок яйца</li>
+                </ul>
+                <a href="https://ru.inshaker.com/cocktails/28-klover-klab" target="_blank" class="link-btn">Рецепт на Inshaker</a>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="img-side"><img src="BS.jpg" alt="Basil Smash"></div>
+            <div class="text-side">
+                <h2>Базиликовый удар</h2>
+                <div class="eng">Basil Smash</div>
+                <div class="tags">Пряный • Свежий • Травянистый</div>
+                <p class="desc">Современная классика, где терпкость джина встречается с ароматной свежестью зеленого базилика.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list">
+                    <li>Сухой Джин</li>
+                    <li>Сахарный сироп</li>
+                    <li>Лимон</li>
+                    <li>Зеленый базилик</li>
+                    <li>Лед в кубиках</li>
+                </ul>
+                <a href="https://ru.inshaker.com/cocktails/13-bazilikovyy-udar" target="_blank" class="link-btn">Рецепт на Inshaker</a>
+            </div>
+        </div>
+
+    </div>
+
+    <footer style="padding: 100px; text-align: center; opacity: 0.3; font-size: 0.7rem; letter-spacing: 5px;">
+        SHALLE ON SATURDAY — COLLECTION 2026
+    </footer>
+
+</body>
+</html>
