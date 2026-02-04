@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shalle on Saturday | 7 Февраля</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #050505;
+            --gold: #d4af37;
+            --white: #e0e0e0;
+            --line: rgba(212, 175, 55, 0.15);
+            /* Ограничили размер, чтобы не вылезало за края на iPhone */
+            --shalle-size: clamp(4rem, 20vw, 15rem);
+        }
+
+        body.warm-mode { --bg: #1a0f0a; --line: rgba(212, 175, 55, 0.25); }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        
+        /* Полностью убираем кастомный курсор на мобилках */
+        @media (pointer: coarse) { 
+            * { cursor: auto !important; } 
+            .cursor { display: none !important; }
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- КУРСОР (только для десктопа) --- */
+        .cursor { 
+            width: 10px; height: 10px; background: var(--gold); border-radius: 50%; 
+            position: fixed; top: 0; left: 0; pointer-events: none; z-index: 11000; 
+            transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s; mix-blend-mode: difference; 
+        }
+        .cursor.hovered { width: 50px; height: 50px; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold); }
+
+        /* --- ШАПКА --- */
+        header {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .shalle-appear {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: var(--shalle-size);
+            line-height: 0.8;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            font-weight: 300;
+            color: var(--white);
+            opacity: 0;
+            filter: blur(20px) brightness(0);
+            transform: scale(0.95);
+            animation: emergeFromShadow 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation-delay: 0.3s;
+            width: 100%;
+            white-space: nowrap;
+        }
+
+        @keyframes emergeFromShadow {
+            to { opacity: 1; filter: blur(0) brightness(1); transform: scale(1); }
+        }
+
+        .tagline-appear {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1rem, 4vw, 3rem);
+            letter-spacing: 1.2vw;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-top: 20px;
+            margin-bottom: 60px;
+            opacity: 0;
+            animation: fadeInSimple 1.5s ease-out forwards;
+            animation-delay: 1.8s;
+        }
+
+        @keyframes fadeInSimple {
+            to { opacity: 1; }
+        }
+
+        .info-panel-appear {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: revealInfo 1s ease-out forwards;
+            animation-delay: 2.8s;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes revealInfo {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; max-width: 900px; width: 100%; padding-top: 40px; border-top: 1px solid var(--line); }
+        .info-label { font-size: 0.75rem; color: var(--gold); text-transform: uppercase; letter-spacing: 4px; margin-bottom: 8px; font-weight: 600;}
+        .info-value { font-size: 1.1rem; font-weight: 300; }
+
+        .map-btn { text-decoration: none; color: #000; background: var(--gold); font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 600; padding: 22px 50px; margin-top: 50px; transition: 0.5s; display: inline-block; }
+
+        .mode-toggle {
+            position: fixed; bottom: 30px; left: 30px; z-index: 9500;
+            background: transparent; border: 1px solid var(--gold);
+            color: var(--gold); padding: 12px 20px;
+            font-family: 'Cormorant Garamond', serif; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px;
+        }
+
+        /* --- ВЫБОР ГОСТЯ --- */
+        .guest-selection-bar { padding: 80px 20px; text-align: center; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 50px; }
+        .select-wrapper { position: relative; display: inline-block; width: 100%; max-width: 500px; }
+        .custom-select { 
+            background: #000; border: 2px solid var(--gold); color: var(--gold); padding: 22px; 
+            font-family: 'Montserrat', sans-serif; text-transform: uppercase; letter-spacing: 3px; font-size: 1rem;
+            font-weight: 600; outline: none; transition: 0.4s; width: 100%; appearance: none; -webkit-appearance: none;
+            text-align-last: center; color-scheme: dark; 
+        }
+
+        /* --- МЕНЮ --- */
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; }
+        .item { display: flex; min-height: 850px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); position: relative; overflow: hidden; }
+        .item:nth-child(even) { border-right: none; }
+        
+        .img-side { flex: 0.5; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 60px; background: rgba(255, 255, 255, 0.02); transition: padding 0.8s ease; }
+        .img-side img { width: 100%; height: 100%; object-fit: contain; filter: brightness(0.7); transition: transform 1.2s ease, filter 0.8s ease; }
+
+        .item:hover .img-side { padding: 20px; }
+        .item:hover .img-side img { transform: scale(1.1); filter: brightness(1); }
+
+        .text-side { flex: 0.5; padding: clamp(30px, 5vw, 80px); display: flex; flex-direction: column; justify-content: center; z-index: 2; }
+        .bartender-note { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tag { font-size: 0.65rem; padding: 5px 12px; border: 1px solid var(--gold); color: var(--gold); text-transform: uppercase; letter-spacing: 2px; border-radius: 30px; }
+        
+        h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3.5rem); text-transform: uppercase; line-height: 1; margin-bottom: 12px; }
+        .eng { color: var(--gold); font-size: 1.1rem; font-style: italic; margin-bottom: 25px; font-family: 'Cormorant Garamond', serif; opacity: 0.7; }
+        .description { font-size: 1rem; font-weight: 300; line-height: 1.5; margin-bottom: 30px; opacity: 0.8; }
+        
+        .ing-label { font-size: 0.75rem; color: var(--gold); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 3px; font-weight: 600; }
+        .ing-list { list-style: none; margin-bottom: 40px; }
+        .ing-list li { position: relative; padding-left: 25px; margin-bottom: 10px; font-size: 1rem; font-weight: 300; }
+        .ing-list li::before { content: ""; position: absolute; left: 0; top: 10px; width: 15px; height: 1px; background: var(--gold); }
+
+        .order-btn { width: 100%; background: transparent; color: var(--gold); border: 1px solid var(--gold); padding: 22px; text-transform: uppercase; font-weight: 600; letter-spacing: 4px; font-size: 0.85rem; transition: 0.4s; }
+        .order-btn:hover:not(:disabled) { background: var(--gold); color: #000; }
+
+        footer { padding: 100px 20px; text-align: center; border-top: 1px solid var(--line); }
+        .footer-main { color: var(--white); opacity: 0.5; font-size: 0.9rem; letter-spacing: 6px; text-transform: uppercase; margin-bottom: 10px; }
+        .footer-sub { color: var(--gold); font-size: 0.85rem; font-weight: 300; }
+
+        /* --- АДАПТИВ ПОД МОБИЛКИ (В Т.Ч. IPHONE 14 PRO) --- */
+        @media (max-width: 1024px) {
+            .menu-grid { grid-template-columns: 1fr; }
+            .item { flex-direction: column; min-height: auto; border-right: none; }
+            .img-side { height: 400px; padding: 40px; }
+            .item:hover .img-side { padding: 20px; }
+            .hero-info-grid { grid-template-columns: 1fr; gap: 25px; }
+            .shalle-appear { font-size: 18vw; } /* Еще раз страхуем заголовок */
+            .tagline-appear { letter-spacing: 3vw; }
+            .mode-toggle { bottom: 20px; left: 20px; padding: 10px 15px; font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor" id="cursor"></div>
+    <button class="mode-toggle hover-target" onclick="document.body.classList.toggle('warm-mode')">Night Mode</button>
+
+    <header>
+        <h1 class="shalle-appear">Shalle</h1>
+        <div class="tagline-appear">on Saturday</div>
+        
+        <div class="info-panel-appear">
+            <div class="hero-info-grid">
+                <div class="info-block">
+                    <div class="info-label">Сбор гостей</div>
+                    <div class="info-value">7 Февраля, 14:30</div>
+                </div>
+                <div class="info-block">
+                    <div class="info-label">Локация</div>
+                    <div class="info-value">Колодищи, ул.Алексеевская 11</div>
+                </div>
+            </div>
+            <a href="https://yandex.by/maps/-/CPA-RVNP" target="_blank" class="map-btn hover-target">Навигатор</a>
+        </div>
+    </header>
+
+    <section class="guest-selection-bar">
+        <div class="select-wrapper">
+            <select id="globalGuestName" class="custom-select hover-target">
+                <option value="" selected disabled>— КТО ВЫ, ГОСТЬ? —</option>
+                <option value="312386224|Алексей">АЛЕКСЕЙ</option>
+                <option value="127753889|Илья Бутрим">ИЛЬЯ БУ</option>
+                <option value="|Илья Гурский">ИЛЬЯ ГУ</option>
+                <option value="648271992|Лиза">ЛИЗА</option>
+                <option value="|Даша">ДАША</option>
+                <option value="376987186|Паша">ПАША</option>
+                <option value="|Александр">САША Ш</option>
+                <option value="1394323089|Александр Капустин">АЛЕКСАНДР ГРИГОРЬЕВИЧ</option>
+                <option value="|Костя">КОСТЯ</option>
+                <option value="|Максим">МАКС</option>
+                <option value="|Гриша">ГРИША</option>
+                <option value="|Никита">НИКИТА</option>
+                <option value="|СЕРГЕЙ">СЕРГЕЙ</option>
+                <option value="|АНДРЕЙ">АНДРЕЙ</option>
+                <option value="|ЮРА">ЮРА</option>
+            </select>
+        </div>
+    </section>
+
+    <div class="menu-grid">
+        <div class="item">
+            <div class="img-side"><img src="citrus.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Слабый</span><span class="tag">Цитрус</span></div>
+                <h2 class="hover-target">Цитрус Хайбол</h2>
+                <div class="eng">Citrus Highball</div>
+                <p class="description">Яркий микс виски и дюшеса. Идеальная кислинка для субботнего вечера.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Виски</li><li>Лимон</li><li>Лимонад дюшес</li><li>Лед</li></ul>
+                <button class="order-btn hover-target" onclick="sendOrder('Цитрус Хайбол', this)">Заказать коктейль</button>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="img-side"><img src="WS.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Крепкий</span><span class="tag">Шелковистый</span></div>
+                <h2 class="hover-target">Виски Сауэр</h2>
+                <div class="eng">Whisky Sour</div>
+                <p class="description">Безупречный баланс крепости виски, лимонной остроты и нежной текстуры белка.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Виски</li><li>Ангостура биттер</li><li>Сахарный сироп</li><li>Лимонный сок</li><li>Белок</li></ul>
+                <button class="order-btn hover-target" onclick="sendOrder('Виски Сауэр', this)">Заказать коктейль</button>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="img-side"><img src="DA.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Классика</span><span class="tag">Освежающий</span></div>
+                <h2 class="hover-target">Дайкири</h2>
+                <div class="eng">Daiquiri</div>
+                <p class="description">Тропическая легенда на основе светлого рома с выразительным цитрусовым финишем.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Белый ром</li><li>Сахарный сироп</li><li>Лаймовый сок</li><li>Лед</li></ul>
+                <button class="order-btn hover-target" onclick="sendOrder('Дайкири', this)">Заказать коктейль</button>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="img-side"><img src="MT3.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Тики-стайл</span><span class="tag">Миндаль</span></div>
+                <h2 class="hover-target">Май Тай 3</h2>
+                <div class="eng">Pink Mai Tai</div>
+                <p class="description">Розовое прочтение классики с миндальными нотками и богатым вкусом рома.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Белый ром</li><li>Трипл сек</li><li>Миндальный сироп</li><li>Гренадин</li><li>Лимонный сок</li></ul>
+                <button class="order-btn hover-target" onclick="sendOrder('Май Тай 3', this)">Заказать коктейль</button>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="img-side"><img src="CC.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Ягодный</span><span class="tag">Элегантный</span></div>
+                <h2 class="hover-target">Кловер Клаб</h2>
+                <div class="eng">Clover Club</div>
+                <p class="description">Элегантный джиновый коктейль с малиновым сиропом и бархатной пенкой.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Сухой Джин</li><li>Малиновый сироп</li><li>Лаймовый сок</li><li>Белок яйца</li></ul>
+                <button class="order-btn hover-target" onclick="sendOrder('Кловер Клаб', this)">Заказать коктейль</button>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="img-side"><img src="BS.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Пряный</span><span class="tag">Травяной</span></div>
+                <h2 class="hover-target">Базилик Смэш</h2>
+                <div class="eng">Basil Smash</div>
+                <p class="description">Взрывной вкус свежего базилика в сочетании с можжевеловым джином и лимоном.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Сухой Джин</li><li>Сахарный сироп</li><li>Лимон</li><li>Зеленый базилик</li><li>Лед</li></ul>
+                <button class="order-btn hover-target" onclick="sendOrder('Базилик Смэш', this)">Заказать коктейль</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-main">SHALLE ON SATURDAY — 2026</div>
+        <div class="footer-sub">Community Management & Friends</div>
+    </footer>
+
+    <script>
+        const lenis = new Lenis();
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        // КУРСОР: Работает только если есть мышь
+        const cursor = document.getElementById('cursor');
+        const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        
+        if (!isTouch) {
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
+            });
+
+            document.querySelectorAll('.hover-target, button, select, a').forEach(item => {
+                item.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                item.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+        } else {
+            cursor.style.display = 'none';
+        }
+
+        ScrollReveal().reveal('.item', { 
+            delay: 150, 
+            duration: 1000, 
+            opacity: 0, 
+            distance: '40px', 
+            interval: 150 
+        });
+
+        async function sendOrder(cocktail, btn) {
+            const guestValue = document.getElementById('globalGuestName').value;
+            if (!guestValue) { alert("Выберите ваше имя в списке!"); return; }
+            const [guestId, guestName] = guestValue.split('|');
+            btn.disabled = true; btn.innerText = "ОТПРАВЛЯЕМ...";
+            
+            try {
+                fetch(`https://script.google.com/macros/s/AKfycbxqN0Rfgc12GmGJ59mpLXiRSLP_OnJNOvxqaXzF5NeG_GFrMMxKKvhk8PYBSnrpLMr4/exec`, {
+                    method: 'POST', mode: 'no-cors', body: JSON.stringify({ cocktail, name: guestName, guestId })
+                });
+                setTimeout(() => {
+                    btn.innerText = "ГОТОВО";
+                    setTimeout(() => { btn.disabled = false; btn.innerText = "ЗАКАЗАТЬ ЕЩЕ"; }, 3000);
+                }, 1000);
+            } catch (e) { btn.innerText = "ОШИБКА"; btn.disabled = false; }
+        }
+    </script>
+</body>
+</html>
