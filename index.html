@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Shalle on Saturday | 7 Февраля</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #050505;
+            --gold: #d4af37;
+            --white: #e0e0e0;
+            --line: rgba(212, 175, 55, 0.15);
+            --shalle-size: clamp(4rem, 20vw, 15rem);
+            --glass: rgba(10, 10, 10, 0.85);
+        }
+
+        body.warm-mode { --bg: #1a0f0a; --line: rgba(212, 175, 55, 0.25); }
+
+        @media (pointer: fine) {
+            * { cursor: none !important; }
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        #notification {
+            position: fixed; top: -150px; left: 50%; transform: translateX(-50%);
+            background: #000; color: var(--gold); padding: 20px 30px;
+            border-radius: 15px; z-index: 20000; font-size: 0.9rem; font-weight: 500;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid var(--gold);
+            transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            max-width: 90%; text-align: center; line-height: 1.5;
+        }
+        #notification.show { top: 20px; }
+        #notification.error { border-color: #ff4444; color: #ff4444; }
+        .strike { text-decoration: line-through; opacity: 0.6; display: block; }
+
+        #cursor { 
+            width: 12px; height: 12px; background: var(--gold); border-radius: 50%; 
+            position: fixed; top: 0; left: 0; pointer-events: none; z-index: 11000; 
+            transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s; mix-blend-mode: difference; 
+            display: none;
+        }
+        #cursor.hovered { width: 60px; height: 60px; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold); }
+        @media (pointer: fine) { #cursor { display: block; } }
+
+        header {
+            min-height: 100vh;
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; text-align: center; padding: 20px;
+        }
+
+        .countdown { 
+            font-size: 0.8rem; 
+            letter-spacing: 4px; 
+            color: var(--gold);
+            margin-bottom: 20px; 
+            text-transform: uppercase;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .silver-num {
+            background: linear-gradient(145deg, #ffffff 0%, #a1a1a1 50%, #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            display: inline-block;
+            filter: drop-shadow(0 0 1px rgba(255,255,255,0.3));
+        }
+
+        .shalle-appear {
+            font-family: 'Cormorant Garamond', serif; font-size: var(--shalle-size); line-height: 0.8;
+            letter-spacing: -0.02em; text-transform: uppercase; font-weight: 300;
+            animation: emergeFromShadow 2.5s ease forwards;
+        }
+        @keyframes emergeFromShadow { from { opacity: 0; filter: blur(20px); transform: scale(0.95); } to { opacity: 1; filter: blur(0); transform: scale(1); } }
+        .tagline-appear { font-family: 'Cormorant Garamond', serif; font-size: clamp(1rem, 4vw, 3rem); letter-spacing: 1.2vw; text-transform: uppercase; color: var(--gold); margin: 20px 0 60px; }
+
+        .hero-info-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 50px; 
+            max-width: 900px; 
+            width: 100%; 
+            padding-top: 40px; 
+            border-top: 1px solid var(--line); 
+            text-align: center;
+        }
+        .info-label { font-size: 0.75rem; color: var(--gold); text-transform: uppercase; letter-spacing: 4px; margin-bottom: 8px; font-weight: 600;}
+        .info-value { font-size: 1.1rem; font-weight: 300; }
+        
+        .nav-button {
+            display: inline-block;
+            background-color: var(--gold);
+            color: #000;
+            padding: 15px 40px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            font-weight: 700;
+            margin-top: 30px;
+            border-radius: 2px;
+            transition: 0.3s;
+            grid-column: span 2;
+            justify-self: center;
+        }
+        .nav-button:active { transform: scale(0.98); opacity: 0.9; }
+
+        .guest-selection-bar { position: sticky; top: 0; z-index: 10000; padding: 40px 20px; text-align: center; transition: 0.4s; }
+        .guest-selection-bar.is-sticky { 
+            background: var(--glass); 
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px); 
+            border-bottom: 1px solid var(--line); 
+            padding: 15px 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .select-wrapper { width: 100%; max-width: 450px; margin: 0 auto; }
+        .custom-select { background: #000; border: 2px solid var(--gold); color: var(--gold); padding: 18px; width: 100%; font-family: 'Montserrat', sans-serif; text-transform: uppercase; letter-spacing: 3px; font-size: 0.9rem; font-weight: 600; outline: none; border-radius: 0; cursor: pointer; }
+
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; }
+        .item { display: flex; min-height: 850px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); position: relative; overflow: hidden; }
+        .item:nth-child(even) { border-right: none; }
+        
+        .img-side { flex: 0.5; overflow: hidden; position: relative; }
+        .img-side::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 35%; background: linear-gradient(to top, var(--bg), transparent); }
+        .img-side img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7); transition: transform 2s ease, filter 1s ease; }
+        .item:hover .img-side img { transform: scale(1.1); filter: brightness(0.9); }
+
+        .text-side { flex: 0.5; padding: clamp(40px, 6vw, 90px); display: flex; flex-direction: column; justify-content: center; z-index: 2; }
+        .bartender-note { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tag { font-size: 0.65rem; padding: 5px 12px; border: 1px solid var(--gold); color: var(--gold); text-transform: uppercase; letter-spacing: 2px; border-radius: 30px; }
+        
+        h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3.5rem); text-transform: uppercase; line-height: 1; margin-bottom: 12px; }
+        .eng { color: var(--gold); font-size: 1.1rem; font-style: italic; margin-bottom: 25px; opacity: 0.7; font-family: 'Cormorant Garamond', serif; }
+        .description { font-size: 1rem; font-weight: 300; line-height: 1.6; margin-bottom: 30px; opacity: 0.8; }
+        
+        .ing-label { font-size: 0.75rem; color: var(--gold); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 3px; font-weight: 600; }
+        .ing-list { list-style: none; margin-bottom: 40px; }
+        .ing-list li { position: relative; padding-left: 25px; margin-bottom: 10px; font-size: 1rem; font-weight: 300; }
+        .ing-list li::before { content: ""; position: absolute; left: 0; top: 10px; width: 15px; height: 1px; background: var(--gold); }
+
+        .order-btn { width: 100%; background: transparent; color: var(--gold); border: 1px solid var(--gold); padding: 22px; text-transform: uppercase; font-weight: 600; letter-spacing: 4px; font-size: 0.85rem; position: relative; overflow: hidden; z-index: 1; transition: 0.4s; cursor: pointer; }
+        .btn-progress { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--gold); z-index: -1; transition: width 1s linear; }
+        .order-btn.loading { color: #000; border-color: transparent; }
+        .order-btn:active { transform: scale(0.97); }
+
+        footer { 
+            padding: 80px 20px; 
+            text-align: center; 
+            border-top: 1px solid var(--line); 
+            background: #000;
+        }
+        .footer-main { 
+            color: #fff; 
+            opacity: 0.9;
+            letter-spacing: 5px; 
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        .footer-credits { 
+            color: var(--gold); 
+            opacity: 0.8; 
+            letter-spacing: 3px; 
+            text-transform: uppercase; 
+            font-size: 0.7rem; 
+        }
+
+        @media (max-width: 1024px) {
+            .hero-info-grid { grid-template-columns: 1fr; gap: 30px; padding: 40px 20px; border-top: none; }
+            .info-value { font-size: 1.4rem; }
+            .nav-button { grid-column: 1; padding: 20px 60px; font-size: 0.9rem; width: 85%; }
+            .menu-grid { grid-template-columns: 1fr; }
+            .item { flex-direction: column; min-height: auto; }
+            .img-side { height: 45vh; }
+            .text-side { padding: 40px 25px 60px; }
+            .shalle-appear { font-size: 16vw; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="notification">🍸 Заказ принят. Бармен уже в деле!</div>
+    <div id="cursor"></div>
+    
+    <header>
+        <div class="countdown" id="timer">Loading...</div>
+        <h1 class="shalle-appear">Shalle</h1>
+        <div class="tagline-appear">on Saturday</div>
+        
+        <div class="hero-info-grid">
+            <div>
+                <div class="info-label">Сбор гостей</div>
+                <div class="info-value">7 Февраля, 14:30</div>
+            </div>
+            <div>
+                <div class="info-label">Локация</div>
+                <div class="info-value">Колодищи, ул. Алексеевская 11</div>
+            </div>
+            <a href="yandexmaps://maps.yandex.ru/?text=Колодищи,+ул.+Алексеевская+11" class="nav-button">
+                НАВИГАТОР
+            </a>
+        </div>
+    </header>
+
+    <section class="guest-selection-bar" id="stickyBar">
+        <div class="select-wrapper">
+            <select id="globalGuestName" class="custom-select">
+                <option value="" selected disabled>— КТО ВЫ, ГОСТЬ? —</option>
+                <option value="312386224|Алексей">АЛЕКСЕЙ</option>
+                <option value="127753889|Илья">ИЛЬЯ Б\У</option>
+                <option value="246752194|Илья">ИЛЬЯ ГУ</option>
+                <option value="648271992|Лиза">ЛИЗА</option>
+                <option value="403029537|Даша">ДАША🐸</option>
+                <option value="376987186|Паша">ПАША</option>
+                <option value="0|Александр">САША Ш</option>
+                <option value="1394323089|Александр Капустин">АЛЕКСАНДР ГРИГОРЬЕВИЧ</option>
+                <option value="0|Костя">КОСТЯ</option>
+                <option value="0|Максим">МАКС</option>
+                <option value="0|Гриша">ГРИША</option>
+                <option value="0|СЕРГЕЙ">СЕРГЕЙ</option>
+                <option value="127014578|АНДРЕЙ">АНДРЕЙ</option>
+                <option value="243825199|ЮРА">ЮРА</option>
+            </select>
+        </div>
+    </section>
+
+    <div class="menu-grid">
+        <div id="secretBeerBlock" class="item" style="display: none; opacity: 0; transition: opacity 1s ease;">
+            <div class="img-side"><img src="beer.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Эксклюзив</span><span class="tag">Божественный</span></div>
+                <h2>Золото Шале</h2>
+                <div class="eng">Premium Beer Reserve</div>
+                <p class="description">Божественный нектар с насыщенным солодовым телом и благородным ароматом. Истинная классика для тех, кто ценит глубину вкуса.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Ячменный солод</li><li>Отборный хмель</li><li>Кристальная вода</li><li>Душа бармена</li></ul>
+                <button class="order-btn" onclick="sendOrder('Пиво Золото Шале', this)">
+                    <span class="btn-text">Заказать бокал</span>
+                    <div class="btn-progress"></div>
+                </button>
+            </div>
+        </div>
+
+        <div id="secretCarBlock" class="item" style="display: none; opacity: 0; transition: opacity 1s ease;">
+            <div class="img-side"><img src="geelly.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Мечта</span><span class="tag">Идеал</span></div>
+                <h2>Райская машина</h2>
+                <div class="eng">The Absolute King of Roads</div>
+                <p class="description">Вершина эволюции автопрома. Машина, которая не просто едет, а внушает трепет. Каждый изгиб — это искусство, каждый старт — победа. Лучшее, что случалось с этим миром.</p>
+                <div class="ing-label">Особенности</div>
+                <ul class="ing-list"><li>Безупречный стиль</li><li>Китайская мощь</li><li>Зависть соседей</li><li>Geely Coolray</li></ul>
+                <button class="order-btn" onclick="sendOrder('Geely Coolray', this)">
+                    <span class="btn-text">Овладеть мечтой</span>
+                    <div class="btn-progress"></div>
+                </button>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="img-side"><img src="citrus.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Слабый</span><span class="tag">Цитрус</span></div>
+                <h2>Цитрус Хайбол</h2>
+                <div class="eng">Citrus Highball</div>
+                <p class="description">Яркий микс виски и дюшеса. Идеальная кислинка для субботнего вечера.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Виски</li><li>Лимон</li><li>Лимонад дюшес</li><li>Лед</li></ul>
+                <button class="order-btn" onclick="sendOrder('Цитрус Хайбол', this)">
+                    <span class="btn-text">Заказать коктейль</span>
+                    <div class="btn-progress"></div>
+                </button>
+            </div>
+        </div>
+        <div class="item">
+            <div class="img-side"><img src="WS.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Крепкий</span><span class="tag">Шелковистый</span></div>
+                <h2>Виски Сауэр</h2>
+                <div class="eng">Whisky Sour</div>
+                <p class="description">Безупречный баланс крепости виски, лимонной остроты и нежной текстуры белка.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Виски</li><li>Ангостура биттер</li><li>Сахарный сироп</li><li>Лимонный сок</li><li>Белок</li></ul>
+                <button class="order-btn" onclick="sendOrder('Виски Сауэр', this)">
+                    <span class="btn-text">Заказать коктейль</span>
+                    <div class="btn-progress"></div>
+                </button>
+            </div>
+        </div>
+        <div class="item">
+            <div class="img-side"><img src="DA.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Классика</span><span class="tag">Освежающий</span></div>
+                <h2>Дайкири</h2>
+                <div class="eng">Daiquiri</div>
+                <p class="description">Тропическая легенда на основе светлого рома с выразительным цитрусовым финишем.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Белый ром</li><li>Сахарный сироп</li><li>Лаймовый сок</li><li>Лед</li></ul>
+                <button class="order-btn" onclick="sendOrder('Дайкири', this)">
+                    <span class="btn-text">Заказать коктейль</span>
+                    <div class="btn-progress"></div>
+                </button>
+            </div>
+        </div>
+        <div class="item">
+            <div class="img-side"><img src="MT3.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Тики-стайл</span><span class="tag">Миндаль</span></div>
+                <h2>Май Тай 3</h2>
+                <div class="eng">Pink Mai Tai</div>
+                <p class="description">Розовое прочтение классики с миндальными нотками и богатым вкусом рома.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Белый ром</li><li>Трипл сек</li><li>Миндальный сироп</li><li>Гренадин</li><li>Лимонный сок</li></ul>
+                <button class="order-btn" onclick="sendOrder('Май Тай 3', this)">
+                    <span class="btn-text">Заказать коктейль</span>
+                    <div class="btn-progress"></div>
+                </button>
+            </div>
+        </div>
+        <div class="item">
+            <div class="img-side"><img src="CC.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Ягодный</span><span class="tag">Элегантный</span></div>
+                <h2>Кловер Клаб</h2>
+                <div class="eng">Clover Club</div>
+                <p class="description">Элегантный джиновый коктейль с малиновым сиропом и бархатной пенкой.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Сухой Джин</li><li>Малиновый сироп</li><li>Лаймовый сок</li><li>Белок яйца</li></ul>
+                <button class="order-btn" onclick="sendOrder('Кловер Клаб', this)">
+                    <span class="btn-text">Заказать коктейль</span>
+                    <div class="btn-progress"></div>
+                </button>
+            </div>
+        </div>
+        <div class="item">
+            <div class="img-side"><img src="BS.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Пряный</span><span class="tag">Травяной</span></div>
+                <h2>Базилик Смэш</h2>
+                <div class="eng">Basil Smash</div>
+                <p class="description">Взрывной вкус свежего базилика в сочетании с можжевеловым джином и лимоном.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Сухой Джин</li><li>Сахарный сироп</li><li>Лимон</li><li>Зеленый базилик</li><li>Лед</li></ul>
+                <button class="order-btn" onclick="sendOrder('Базилик Смэш', this)">
+                    <span class="btn-text">Заказать коктейль</span>
+                    <div class="btn-progress"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-main">SHALLE ON SATURDAY — 2026</div>
+        <div class="footer-credits">COMMUNITY MANAGEMENT & FRIENDS</div>
+    </footer>
+
+    <script>
+        const lenis = new Lenis();
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        const cursor = document.getElementById('cursor');
+        const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        if (!isTouch) {
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
+            });
+            document.querySelectorAll('button, select, a, .item').forEach(item => {
+                item.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                item.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+        }
+
+        const guestSelect = document.getElementById('globalGuestName');
+        let carAttempts = 0; 
+
+        // --- ОБНОВЛЕННАЯ ФУНКЦИЯ ПРОВЕРКИ ---
+        function checkSecretMenu() {
+            const secretBeer = document.getElementById('secretBeerBlock');
+            const secretCar = document.getElementById('secretCarBlock');
+            
+            if (guestSelect.selectedIndex <= 0) return; // Если ничего не выбрано
+
+            // Получаем текст выбранной опции (например, "ИЛЬЯ ГУ")
+            const selectedText = guestSelect.options[guestSelect.selectedIndex].text.toUpperCase();
+
+            const isSergey = selectedText.includes('СЕРГЕЙ');
+            const isIlyaGU = selectedText.includes('ИЛЬЯ ГУ');
+
+            // Управление блоком Пива
+            if (isSergey) {
+                secretBeer.style.display = 'flex';
+                setTimeout(() => { secretBeer.style.opacity = "1"; }, 10);
+            } else {
+                secretBeer.style.opacity = "0";
+                secretBeer.style.display = 'none';
+            }
+
+            // Управление блоком Машины
+            if (isIlyaGU) {
+                secretCar.style.display = 'flex';
+                setTimeout(() => { secretCar.style.opacity = "1"; }, 10);
+            } else {
+                secretCar.style.opacity = "0";
+                secretCar.style.display = 'none';
+                carAttempts = 0;
+            }
+        }
+
+        guestSelect.addEventListener('change', (e) => {
+            const val = e.target.value;
+            localStorage.setItem('shalle_guest', val);
+            checkSecretMenu(); // Теперь функция сама берет данные из select
+        });
+
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('shalle_guest');
+            if (saved) {
+                guestSelect.value = saved;
+                checkSecretMenu();
+            }
+            
+            ScrollReveal().reveal('.item:not(#secretBeerBlock):not(#secretCarBlock)', { 
+                delay: 150, 
+                duration: 1000, 
+                opacity: 0, 
+                distance: '30px', 
+                interval: 150 
+            });
+
+            checkSticky();
+        });
+
+        function checkSticky() {
+            const bar = document.getElementById('stickyBar');
+            if (window.scrollY > 100) bar.classList.add('is-sticky');
+            else bar.classList.remove('is-sticky');
+        }
+        window.addEventListener('scroll', checkSticky);
+
+        function updateTimer() {
+            const startTime = new Date('February 7, 2026 14:30:00').getTime();
+            const endTime = new Date('February 8, 2026 12:00:00').getTime();
+            const now = new Date().getTime();
+            const timerElement = document.getElementById('timer');
+
+            if (now < startTime) {
+                const diff = startTime - now;
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                timerElement.innerHTML = `До начала: <span class="silver-num">${d}</span>д <span class="silver-num">${h}</span>ч <span class="silver-num">${m}</span>м`;
+            } 
+            else if (now >= startTime && now < endTime) {
+                const diffSeconds = Math.floor((endTime - now) / 1000);
+                timerElement.innerHTML = `Мероприятие в разгаре! <br> До конца <span class="silver-num">${diffSeconds.toLocaleString('ru-RU')}</span> секунд`;
+                timerElement.style.lineHeight = "1.6";
+            } 
+            else {
+                timerElement.innerText = "До новых встреч в Shalle!";
+            }
+        }
+        setInterval(updateTimer, 1000); updateTimer();
+
+        async function sendOrder(cocktail, btn) {
+            const guestValue = guestSelect.value;
+            if (!guestValue) { 
+                alert("Сначала выберите ваше имя в списке!"); 
+                window.scrollTo({top: document.getElementById('stickyBar').offsetTop - 50, behavior: 'smooth'});
+                return; 
+            }
+
+            const [guestId, guestName] = guestValue.split('|');
+            const progress = btn.querySelector('.btn-progress');
+            const btnText = btn.querySelector('.btn-text');
+            const notif = document.getElementById('notification');
+
+            // --- ЛОГИКА ДЛЯ ИЛЬИ (МАШИНА) ---
+            if (cocktail === 'Geely Coolray') {
+                carAttempts++;
+                if (carAttempts === 1) {
+                    notif.innerHTML = "🍸 Заказ принят. Бармен уже в деле!";
+                    notif.classList.add('show');
+                    setTimeout(() => {
+                        notif.innerHTML = `<span class="strike">🍸 Заказ принят. Бармен уже в деле!</span><br>Что-то пошло не так. Повторите заказ!`;
+                        notif.classList.add('error');
+                    }, 1500);
+                    setTimeout(() => { notif.classList.remove('show'); setTimeout(() => notif.classList.remove('error'), 500); }, 5000);
+                } else {
+                    window.open('https://www.youtube.com/watch?v=GekqQHzwWmM', '_blank');
+                    carAttempts = 0;
+                }
+                return;
+            }
+
+            // --- ПРОВЕРКА НА ПИВО ДЛЯ СЕРГЕЯ ---
+            if (cocktail === 'Пиво Золото Шале') {
+                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                notif.innerHTML = "Серьезно? Пиво? Ты заказал пиво?<br>Может тебе и раков ещё с ним подать?<br><br><b>В ЗАКАЗЕ ОТКАЗАНО!!!</b><br><br>В холодильнике сам возьмешь.";
+                notif.classList.add('show', 'error');
+                btnText.innerText = "ОТКАЗАНО";
+                setTimeout(() => { 
+                    notif.classList.remove('show');
+                    setTimeout(() => { 
+                        notif.classList.remove('error');
+                        btnText.innerText = "ЗАКАЗАТЬ БОКАЛ";
+                    }, 500);
+                }, 8000);
+                return;
+            }
+
+            if (navigator.vibrate) navigator.vibrate(40);
+
+            btn.classList.add('loading');
+            btnText.innerText = "ОТПРАВЛЯЕМ...";
+            progress.style.width = "100%";
+
+            try {
+                const scriptUrl = "https://script.google.com/macros/s/AKfycby0Db2xZyaFpTWc2xYoYy0UErmM0y5afQs5FJgFeX1v-FMowC0le6JWBFJ_tVUbYfBT/exec";
+                const finalUrl = `${scriptUrl}?cocktail=${encodeURIComponent(cocktail)}&name=${encodeURIComponent(guestName)}&guestId=${guestId}`;
+
+                fetch(finalUrl, { method: 'GET', mode: 'no-cors' });
+                
+                setTimeout(() => {
+                    notif.innerHTML = "🍸 Заказ принят. Бармен уже в деле!";
+                    notif.classList.add('show');
+                    setTimeout(() => { notif.classList.remove('show'); }, 4000);
+                    
+                    btnText.innerText = "ГОТОВО";
+                    setTimeout(() => {
+                        btn.classList.remove('loading');
+                        progress.style.width = "0%";
+                        btnText.innerText = "ЗАКАЗАТЬ ЕЩЕ";
+                    }, 3000);
+                }, 1000);
+            } catch (e) {
+                btnText.innerText = "ОШИБКА";
+                btn.classList.remove('loading');
+            }
+        }
+    </script>
+</body>
+</html>
