@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Shalle on Saturday | 7 Февраля</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #050505;
+            --gold: #d4af37;
+            --white: #e0e0e0;
+            --line: rgba(212, 175, 55, 0.15);
+            --shalle-size: clamp(4rem, 20vw, 15rem);
+            --glass: rgba(10, 10, 10, 0.85);
+        }
+
+        body.warm-mode { --bg: #1a0f0a; --line: rgba(212, 175, 55, 0.25); }
+
+        @media (pointer: fine) {
+            * { cursor: none !important; }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg); color: var(--white); font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
+
+        /* СТИЛИ ПАСХАЛКИ ПАШИ */
+        .vw-easter-egg {
+            display: none;
+            font-size: 1.2rem;
+            color: var(--gold);
+            opacity: 0.15;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: opacity 0.3s;
+            user-select: none;
+        }
+        .vw-easter-egg:hover { opacity: 0.4; }
+        #pureOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 30000;
+            display: none; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.5s ease;
+        }
+        #pureText {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem; color: var(--gold);
+            text-transform: uppercase; letter-spacing: 5px; text-align: center;
+        }
+        #pureImageLayer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 30001; display: none; background: #000;
+        }
+        #pureImageLayer img { width: 100%; height: 100%; object-fit: contain; }
+
+        /* ЭЛЕГАНТНАЯ ПАСХАЛКА ЛИЗЫ */
+        #lizaTrigger {
+            display: none; position: fixed; bottom: 30px; right: 30px; z-index: 9999;
+            background: rgba(0,0,0,0.8); border: 1px solid var(--gold); color: var(--gold);
+            padding: 12px 20px; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase;
+            cursor: pointer; backdrop-filter: blur(10px); transition: 0.3s;
+        }
+        #lizaTrigger:hover { background: var(--gold); color: #000; }
+        
+        #lizaModalOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            z-index: 40000; display: none; align-items: center; justify-content: center; padding: 20px;
+            opacity: 0; transition: opacity 0.4s ease;
+        }
+        #lizaModalOverlay.active { display: flex; opacity: 1; }
+
+        .liza-card {
+            background: #0a0a0a; border: 1px solid var(--gold); width: 100%; max-width: 400px;
+            position: relative; overflow: hidden; transform: translateY(20px); transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        #lizaModalOverlay.active .liza-card { transform: translateY(0); }
+
+        .liza-card-img { width: 100%; height: 250px; overflow: hidden; border-bottom: 1px solid var(--line); }
+        .liza-card-img img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8); }
+
+        .liza-content { padding: 25px; text-align: center; }
+        .liza-special-label { 
+            font-size: 0.6rem; color: var(--gold); text-transform: uppercase; 
+            letter-spacing: 2px; margin-bottom: 10px; display: block; opacity: 0.8;
+        }
+        .liza-card h2 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; text-transform: uppercase; margin-bottom: 5px; color: #fff; }
+        .liza-card .eng { color: var(--gold); font-size: 0.8rem; font-style: italic; margin-bottom: 15px; opacity: 0.7; }
+        .liza-card .description { font-size: 0.85rem; margin-bottom: 20px; line-height: 1.5; opacity: 0.8; }
+        
+        .close-liza {
+            position: absolute; top: 12px; right: 12px; color: var(--white);
+            font-size: 1.2rem; cursor: pointer; z-index: 10; opacity: 0.5; transition: 0.3s;
+        }
+        .close-liza:hover { opacity: 1; color: var(--gold); }
+
+        /* ОСТАЛЬНОЙ ФУНКЦИОНАЛ */
+        #notification {
+            position: fixed; top: -150px; left: 50%; transform: translateX(-50%);
+            background: #000; color: var(--gold); padding: 20px 30px;
+            border-radius: 15px; z-index: 50000; font-size: 0.9rem; font-weight: 500;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid var(--gold);
+            transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            max-width: 90%; text-align: center; line-height: 1.5;
+        }
+        #notification.show { top: 20px; }
+        #notification.error { border-color: #ff4444; color: #ff4444; }
+        .strike { text-decoration: line-through; opacity: 0.6; display: block; }
+
+        #cursor { 
+            width: 12px; height: 12px; background: var(--gold); border-radius: 50%; 
+            position: fixed; top: 0; left: 0; pointer-events: none; z-index: 60000; 
+            transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s; mix-blend-mode: difference; 
+            display: none;
+        }
+        #cursor.hovered { width: 60px; height: 60px; background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold); }
+        @media (pointer: fine) { #cursor { display: block; } }
+
+        header { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; }
+        .countdown { font-size: 0.8rem; letter-spacing: 4px; color: var(--gold); margin-bottom: 20px; text-transform: uppercase; font-weight: 600; text-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
+        .silver-num { background: linear-gradient(145deg, #ffffff 0%, #a1a1a1 50%, #ffffff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; display: inline-block; filter: drop-shadow(0 0 1px rgba(255,255,255,0.3)); }
+        
+        .shalle-appear { font-family: 'Cormorant Garamond', serif; font-size: var(--shalle-size); line-height: 0.8; letter-spacing: -0.02em; text-transform: uppercase; font-weight: 300; animation: emergeFromShadow 2.5s ease forwards; }
+        @keyframes emergeFromShadow { from { opacity: 0; filter: blur(20px); transform: scale(0.95); } to { opacity: 1; filter: blur(0); transform: scale(1); } }
+        .tagline-appear { font-family: 'Cormorant Garamond', serif; font-size: clamp(1rem, 4vw, 3rem); letter-spacing: 1.2vw; text-transform: uppercase; color: var(--gold); margin: 20px 0 60px; }
+
+        .hero-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; max-width: 900px; width: 100%; padding-top: 40px; border-top: 1px solid var(--line); text-align: center; }
+        .info-label { font-size: 0.75rem; color: var(--gold); text-transform: uppercase; letter-spacing: 4px; margin-bottom: 8px; font-weight: 600;}
+        .info-value { font-size: 1.1rem; font-weight: 300; }
+
+        .nav-button { display: inline-block; background-color: var(--gold); color: #000; padding: 15px 40px; text-decoration: none; font-size: 0.8rem; letter-spacing: 3px; font-weight: 700; margin-top: 30px; border-radius: 2px; transition: 0.3s; grid-column: span 2; justify-self: center; }
+        .nav-button:active { transform: scale(0.98); opacity: 0.9; }
+
+        .guest-selection-bar { position: sticky; top: 0; z-index: 10000; padding: 40px 20px; text-align: center; transition: 0.4s; }
+        .guest-selection-bar.is-sticky { background: var(--glass); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-bottom: 1px solid var(--line); padding: 15px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .select-wrapper { width: 100%; max-width: 450px; margin: 0 auto; }
+        .custom-select { background: #000; border: 2px solid var(--gold); color: var(--gold); padding: 18px; width: 100%; font-family: 'Montserrat', sans-serif; text-transform: uppercase; letter-spacing: 3px; font-size: 0.9rem; font-weight: 600; outline: none; border-radius: 0; cursor: pointer; }
+
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; }
+        .item { display: flex; min-height: 850px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); position: relative; overflow: hidden; }
+        .item:nth-child(even) { border-right: none; }
+        .img-side { flex: 0.5; overflow: hidden; position: relative; }
+        .img-side::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 35%; background: linear-gradient(to top, var(--bg), transparent); }
+        .img-side img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7); transition: transform 2s ease, filter 1s ease; }
+        .item:hover .img-side img { transform: scale(1.1); filter: brightness(0.9); }
+        .text-side { flex: 0.5; padding: clamp(40px, 6vw, 90px); display: flex; flex-direction: column; justify-content: center; z-index: 2; }
+
+        .bartender-note { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tag { font-size: 0.65rem; padding: 5px 12px; border: 1px solid var(--gold); color: var(--gold); text-transform: uppercase; letter-spacing: 2px; border-radius: 30px; }
+        
+        h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3.5rem); text-transform: uppercase; line-height: 1; margin-bottom: 12px; }
+        .eng { color: var(--gold); font-size: 1.1rem; font-style: italic; margin-bottom: 25px; opacity: 0.7; font-family: 'Cormorant Garamond', serif; }
+        .description { font-size: 1rem; font-weight: 300; line-height: 1.6; margin-bottom: 30px; opacity: 0.8; }
+        
+        .ing-label { font-size: 0.75rem; color: var(--gold); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 3px; font-weight: 600; }
+        .ing-list { list-style: none; margin-bottom: 40px; }
+        .ing-list li { position: relative; padding-left: 25px; margin-bottom: 10px; font-size: 1rem; font-weight: 300; }
+        .ing-list li::before { content: ""; position: absolute; left: 0; top: 10px; width: 15px; height: 1px; background: var(--gold); }
+
+        .order-btn { width: 100%; background: transparent; color: var(--gold); border: 1px solid var(--gold); padding: 22px; text-transform: uppercase; font-weight: 600; letter-spacing: 4px; font-size: 0.85rem; position: relative; overflow: hidden; z-index: 1; transition: 0.4s; cursor: pointer; }
+        .btn-progress { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--gold); z-index: -1; transition: width 1s linear; }
+        .order-btn.loading { color: #000; border-color: transparent; }
+
+        #shneineToggleBtn { display: none; position: fixed; bottom: 30px; left: 30px; z-index: 99999; background: #000; color: var(--gold); border: 1px solid var(--gold); padding: 12px 20px; font-family: 'Montserrat', sans-serif; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.5); transition: 0.3s; }
+        #shneineToggleBtn:hover { background: var(--gold); color: #000; }
+
+        footer { padding: 80px 20px; text-align: center; border-top: 1px solid var(--line); background: #000; }
+        .footer-main { color: #fff; opacity: 0.9; letter-spacing: 5px; text-transform: uppercase; font-size: 0.9rem; margin-bottom: 15px; }
+        .footer-credits { color: var(--gold); opacity: 0.8; letter-spacing: 3px; text-transform: uppercase; font-size: 0.7rem; }
+
+        @media (max-width: 1024px) {
+            .hero-info-grid { grid-template-columns: 1fr; gap: 30px; padding: 40px 20px; border-top: none; }
+            .info-value { font-size: 1.4rem; }
+            .nav-button { grid-column: 1; padding: 20px 60px; font-size: 0.9rem; width: 85%; }
+            .menu-grid { grid-template-columns: 1fr; }
+            .item { flex-direction: column; min-height: auto; }
+            .img-side { height: 45vh; }
+            .text-side { padding: 40px 25px 60px; }
+            .shalle-appear { font-size: 16vw; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="pureOverlay"><div id="pureText">Привет от Pure!</div></div>
+    <div id="pureImageLayer" onclick="this.style.display='none'"><img src="pure.jpg"></div>
+
+    <button id="lizaTrigger" onclick="toggleLizaModal(true)">Пссс, хочешь чего-то другого?!</button>
+
+    <div id="lizaModalOverlay" onclick="if(event.target === this) toggleLizaModal(false)">
+        <div class="liza-card">
+            <div class="close-liza" onclick="toggleLizaModal(false)">✕</div>
+            <div class="liza-card-img">
+                <img src="pornstar.jpg" alt="Pornstar Martini">
+            </div>
+            <div class="liza-content">
+                <span class="liza-special-label">только для тебя и только сегодня</span>
+                <h2>Порнозвезда</h2>
+                <div class="eng">Porn Star Martini</div>
+                <p class="description">Специальное персональное предложение: провокационный микс ванильной водки, маракуйи и ледяного просекко.</p>
+                
+                <button class="order-btn" onclick="sendOrder('Порнозвезда', this)">
+                    <span class="btn-text">Принять предложение</span>
+                    <div class="btn-progress"></div>
+                </button>
+                
+                <a href="https://ru.inshaker.com/cocktails/724-pornozvezda" target="_blank" style="color: var(--gold); font-size: 0.6rem; text-decoration: none; letter-spacing: 2px; display: block; margin-top: 20px; text-transform: uppercase; opacity: 0.6;">Открыть рецепт на Inshaker</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification">🍸 Заказ принят. Бармен уже в деле!</div>
+    <div id="cursor"></div>
+
+    <button id="shneineToggleBtn" onclick="toggleShneineMode()">Вкл. Шнейне</button>
+    
+    <header>
+        <div class="countdown" id="timer">Loading...</div>
+        <h1 class="shalle-appear">Shalle</h1>
+        <div class="tagline-appear">on Saturday</div>
+        
+        <div class="hero-info-grid">
+            <div>
+                <div class="info-label">Сбор гостей</div>
+                <div class="info-value">7 Февраля, 14:30</div>
+            </div>
+            <div>
+                <div class="info-label">Локация</div>
+                <div class="info-value">Колодищи, ул. Алексеевская 11</div>
+                <div id="pashaEgg" class="vw-easter-egg" onclick="activatePureEasterEgg()">Ⓦ</div>
+            </div>
+            <a href="yandexmaps://maps.yandex.ru/?text=Колодищи,+ул.+Алексеевская+11" class="nav-button">
+                НАВИГАТОР
+            </a>
+        </div>
+    </header>
+
+    <section class="guest-selection-bar" id="stickyBar">
+        <div class="select-wrapper">
+            <select id="globalGuestName" class="custom-select">
+                <option value="" selected disabled>— КТО ВЫ, ГОСТЬ? —</option>
+                <option value="312386224|Алексей">АЛЕКСЕЙ</option>
+                <option value="127753889|Илья Б\У">ИЛЬЯ Б\У</option>
+                <option value="246752194|Илья ГУ">ИЛЬЯ ГУ</option>
+                <option value="648271992|Лиза">ЛИЗА</option>
+                <option value="403029537|Даша">ДАША🐸</option>
+                <option value="376987186|Паша">ПАША</option>
+                <option value="0|Александр">Александр Ш</option>
+                <option value="1394323089|АЛЕКСАНДР ГРИГОРЬЕВИЧ">АЛЕКСАНДР ГРИГОРЬЕВИЧ</option>
+                <option value="708288472|Костя">КОСТЯ</option>
+                <option value="0|Максим">МАКС</option>
+                <option value="594594628|Гриша">ГРИША</option>
+                <option value="226997070|СЕРГЕЙ">СЕРГЕЙ</option>
+                <option value="127014578|АНДРЕЙ">АНДРЕЙ</option>
+                <option value="243825199|ЮРА">ЮРА</option>
+            </select>
+        </div>
+    </section>
+
+    <div class="menu-grid">
+        <div class="item">
+            <div class="img-side"><img src="citrus.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Слабый</span><span class="tag">Цитрус</span></div>
+                <h2 class="cocktail-name">Цитрус Хайбол</h2>
+                <div class="eng">Citrus Highball</div>
+                <p class="description">Яркий микс виски и дюшеса. Идеальная кислинка для субботнего вечера.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Виски</li><li>Лимон</li><li>Лимонад дюшес</li><li>Лед</li></ul>
+                <button class="order-btn" onclick="sendOrder('Цитрус Хайбол', this)">
+                    <span class="btn-text">Заказать коктейль</span>
+                    <div class="btn-progress"></div>
+                </button>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="img-side"><img src="WS.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Крепкий</span><span class="tag">Шелковистый</span></div>
+                <h2 class="cocktail-name">Виски Сауэр</h2>
+                <div class="eng">Whisky Sour</div>
+                <p class="description">Безупречный баланс крепости виски, лимонной остроты и нежной текстуры белка.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Виски</li><li>Ангостура биттер</li><li>Сахарный сироп</li><li>Лимонный сок</li><li>Белок</li></ul>
+                <button class="order-btn" onclick="sendOrder('Виски Сауэр', this)">
+                    <span class="btn-text">Заказать коктейль</span>
+                    <div class="btn-progress"></div>
+                </button>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="img-side"><img src="DA.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Классика</span><span class="tag">Освежающий</span></div>
+                <h2 class="cocktail-name">Дайкири</h2>
+                <div class="eng">Daiquiri</div>
+                <p class="description">Тропическая легенда на основе светлого рома with выразительным цитрусовым финишем.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Белый ром</li><li>Сахарный сироп</li><li>Лаймовый сок</li><li>Лед</li></ul>
+                <button class="order-btn" onclick="sendOrder('Дайкири', this)">
+                    <span class="btn-text">Заказать коктейль</span>
+                    <div class="btn-progress"></div>
+                </button>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="img-side"><img src="MT3.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Тики-стайл</span><span class="tag">Миндаль</span></div>
+                <h2 class="cocktail-name">Май Тай 3</h2>
+                <div class="eng">Pink Mai Tai</div>
+                <p class="description">Розовое прочтение классики с миндальными нотками и богатым вкусом рома.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Белый ром</li><li>Трипл сек</li><li>Миндальный сироп</li><li>Гренадин</li><li>Лимонный сок</li></ul>
+                <button class="order-btn" onclick="sendOrder('Май Тай 3', this)">
+                    <span class="btn-text">Заказать коктейль</span>
+                    <div class="btn-progress"></div>
+                </button>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="img-side"><img src="CC.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Ягодный</span><span class="tag">Элегантный</span></div>
+                <h2 class="cocktail-name">Кловер Клаб</h2>
+                <div class="eng">Clover Club</div>
+                <p class="description">Элегантный джиновый коктейль с малиновым сиропом и бархатной пенкой.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Сухой Джин</li><li>Малиновый сироп</li><li>Лаймовый сок</li><li>Белок яйца</li></ul>
+                <button class="order-btn" onclick="sendOrder('Кловер Клаб', this)">
+                    <span class="btn-text">Заказать коктейль</span>
+                    <div class="btn-progress"></div>
+                </button>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="img-side"><img src="BS.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Пряный</span><span class="tag">Травяной</span></div>
+                <h2 class="cocktail-name">Базилик Смэш</h2>
+                <div class="eng">Basil Smash</div>
+                <p class="description">Взрывной вкус свежего базилика в сочетании с можжевеловым джином и лимоном.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Сухой Джин</li><li>Сахарный сироп</li><li>Лимон</li><li>Зеленый базилик</li><li>Лед</li></ul>
+                <button class="order-btn" onclick="sendOrder('Базилик Смэш', this)">
+                    <span class="btn-text">Заказать коктейль</span>
+                    <div class="btn-progress"></div>
+                </button>
+            </div>
+        </div>
+
+        <div id="secretBeerBlock" class="item" style="display: none; opacity: 0; transition: opacity 1s ease;">
+            <div class="img-side"><img src="beer.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Эксклюзив</span><span class="tag">Божественный</span></div>
+                <h2 class="cocktail-name">Золото Шале</h2>
+                <div class="eng">Premium Beer Reserve</div>
+                <p class="description">Божественный нектар с насыщенным солодовым телом и благородным ароматом.</p>
+                <div class="ing-label">Состав</div>
+                <ul class="ing-list"><li>Ячменный солод</li><li>Отборный хмель</li><li>Кристальная вода</li><li>Душа бармена</li></ul>
+                <button class="order-btn" onclick="sendOrder('Пиво Золото Шале', this)">
+                    <span class="btn-text">Заказать бокал</span>
+                    <div class="btn-progress"></div>
+                </button>
+            </div>
+        </div>
+
+        <div id="secretCarBlock" class="item" style="display: none; opacity: 0; transition: opacity 1s ease;">
+            <div class="img-side"><img src="geelly.jpg"></div>
+            <div class="text-side">
+                <div class="bartender-note"><span class="tag">Мечта</span><span class="tag">Идеал</span></div>
+                <h2 class="cocktail-name">Райская машина</h2>
+                <div class="eng">The Absolute King of Roads</div>
+                <p class="description">Вершина эволюции автопрома. Geely Coolray — это шнейне!</p>
+                <div class="ing-label">Особенности</div>
+                <ul class="ing-list"><li>Безупречный стиль</li><li>Китайская мощь</li><li>Зависть соседей</li><li>Geely Coolray</li></ul>
+                <button class="order-btn" onclick="sendOrder('Geely Coolray', this)">
+                    <span class="btn-text">Овладеть мечтой</span>
+                    <div class="btn-progress"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-main">SHALLE ON SATURDAY — 2026</div>
+        <div class="footer-credits">COMMUNITY MANAGEMENT & FRIENDS</div>
+    </footer>
+
+    <script>
+        const lenis = new Lenis();
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        const cursor = document.getElementById('cursor');
+        const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        if (!isTouch) {
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
+            });
+            document.querySelectorAll('button, select, a, .item').forEach(item => {
+                item.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+                item.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+            });
+        }
+
+        const guestSelect = document.getElementById('globalGuestName');
+        let carAttempts = 0; 
+        let shneineMode = false;
+        let toadMode = false;
+
+        function toggleLizaModal(show) {
+            const overlay = document.getElementById('lizaModalOverlay');
+            if(show) {
+                overlay.style.display = 'flex';
+                setTimeout(() => overlay.classList.add('active'), 10);
+            } else {
+                overlay.classList.remove('active');
+                setTimeout(() => overlay.style.display = 'none', 400);
+            }
+        }
+
+        function activatePureEasterEgg() {
+            const overlay = document.getElementById('pureOverlay');
+            const imgLayer = document.getElementById('pureImageLayer');
+            overlay.style.display = 'flex';
+            setTimeout(() => overlay.style.opacity = '1', 50);
+            setTimeout(() => {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    imgLayer.style.display = 'block';
+                }, 500);
+            }, 1000);
+        }
+
+        const shneineTexts = {
+            "Цитрус Хайбол": "Ватафа Цитрус Бум",
+            "Яркий микс виски и дюшеса. Идеальная кислинка для субботнего вечера.": "Ватафа! Это же кислый шнейне-бум! Лимон и лайм делают жесткое «пепе». Бодрит по-шнейне!",
+            "Виски Сауэр": "Шнейне Сауэр Пепе",
+            "Безупречный баланс крепости виски, лимонной остроты и нежной текстуры белка.": "Ватафа, бро! Это шнейне-пепе в чистом виде. Виски делает «пепе» у тебя на языке.",
+            "Дайкири": "Дайкири Ватафа",
+            "Тропическая легенда на основе светлого рома with выразительным цитрусовым финишем.": "Шнейне легенда! Ром делает ватафа, а лайм закрывает вопрос по-пепе.",
+            "Май Тай 3": "Шнейне Тай Пепе",
+            "Розовое прочтение классики с миндальными нотками и богатым вкусом рома.": "О-о-о, шнейне пепе! Клубнично-миндальный ватафа.",
+            "Кловер Клаб": "Кловер Шнейне",
+            "Элегантный джиновый коктейль с малиновым сиропом и бархатной пенкой.": "Ватафа, какая пенка! Малинка делает пепе-пепе.",
+            "Базилик Смэш": "Базилик Ватафа",
+            "Взрывной вкус свежего базилика в сочетании с можжевеловым джином и лимоном.": "Взрывной шнейне-пепе! Трава делает ватафа.",
+            "Золото Шале": "Ватафа Золото Шнейне",
+            "Божественный нектар с насыщенным солодовым телом и благородным ароматом.": "Божественный шнейне-нектар! Солод делает пепе-пепе.",
+            "Райская машина": "Ватафа Шнейне Машина",
+            "Вершина эволюции автопрома. Geely Coolray — это шнейне!": "Вершина шнейне-эволюции! Машина делает ватафа на дороге."
+        };
+
+        const toadDictionary = {
+            // General UI
+            "Shalle": "Bologo", 
+            "on Saturday": "in Swamp", 
+            "Сбор гостей": "Сходка Жаб", 
+            "Локация": "Родное Болото",
+            "7 Февраля, 14:30": "7 Ква-враля, 14:30",
+            "Колодищи, ул. Алексеевская 11": "Болото, кочка №11",
+            "НАВИГАТОР": "ПРЫГАТЬ ТУДА", 
+            "Состав": "Из чего булькает", 
+            "Особенности": "Фишки жаб",
+            "Заказать коктейль": "КВАКНУТЬ", 
+            "Заказать бокал": "БУЛЬКНУТЬ",
+            "Овладеть мечтой": "ОСЕДЛАТЬ ЖУКА",
+            "SHALLE ON SATURDAY — 2026": "БОЛОТО НА СУББОТУ — 2026",
+            "COMMUNITY MANAGEMENT & FRIENDS": "SWAMP MANAGEMENT & TOADS",
+            "Слабый": "Легкий ква",
+            "Цитрус": "Кислый",
+            "Крепкий": "Жесткий",
+            "Шелковистый": "Слизистый",
+            "Классика": "Древность",
+            "Освежающий": "Мокрый",
+            "Тики-стайл": "Ква-стайл",
+            "Миндаль": "Орех",
+            "Ягодный": "С мухами",
+            "Элегантный": "Красивый",
+            "Пряный": "Вкусный",
+            "Травяной": "Тина",
+            "Эксклюзив": "Только жабам",
+            "Божественный": "Великий",
+            "Мечта": "Сон",
+            "Идеал": "Топчик",
+
+            // Ingredients
+            "Виски": "Болотная жижа",
+            "Лимон": "Желтая жаба",
+            "Лимонад дюшес": "Газировка из тины",
+            "Лед": "Град",
+            "Ангостура биттер": "Горькие слезы",
+            "Сахарный сироп": "Сладкая слизь",
+            "Лимонный сок": "Сок жука",
+            "Белок": "Яйцо цапли",
+            "Белый ром": "Светлая вода",
+            "Лаймовый сок": "Зеленый сок",
+            "Трипл сек": "Трипл Ква",
+            "Миндальный сироп": "Ореховая муть",
+            "Гренадин": "Кровь комара",
+            "Сухой Джин": "Сухой камыш",
+            "Малиновый сироп": "Сироп из мошек",
+            "Белок яйца": "Слизь яйца",
+            "Зеленый базилик": "Водоросли",
+            "Ячменный солод": "Жабий солод",
+            "Отборный хмель": "Муха цеце",
+            "Кристальная вода": "Вода из лужи",
+            "Душа бармена": "Душа головастика",
+            "Безупречный стиль": "Зеленый цвет",
+            "Китайская мощь": "Сила жабы",
+            "Зависть соседей": "Зависть цапель",
+            "Geely Coolray": "Ква-мобиль",
+
+            // Cocktails Names & Descriptions
+            "Цитрус Хайбол": "Ква-Хайбол", 
+            "Citrus Highball": "Kwa-Highball",
+            "Яркий микс виски и дюшеса. Идеальная кислинка для субботнего вечера.": "Яркий ква-микс жижи и мух. Идеальная тина для жабьего вечера.",
+            
+            "Виски Сауэр": "Ква-Сауэр", 
+            "Whisky Sour": "Swamp Sour",
+            "Безупречный баланс крепости виски, лимонной остроты и нежной текстуры белка.": "Безупречный баланс болотной жижи, комариной остроты и слизи.",
+
+            "Дайкири": "Дай-Ква-ири", 
+            "Daiquiri": "Die-Kva-iri",
+            "Тропическая легенда на основе светлого рома with выразительным цитрусовым финишем.": "Болотная легенда на основе светлой тины с выразительным ква-финишем.",
+
+            "Май Тай 3": "Май-Ква Тай", 
+            "Pink Mai Tai": "Green Mai Kwa",
+            "Розовое прочтение классики с миндальными нотками и богатым вкусом рома.": "Розовое прочтение ква-классики с нотками кувшинок и вкусом тины.",
+
+            "Кловер Клаб": "Кловер Ква-б", 
+            "Clover Club": "Clover Kwa-b",
+            "Элегантный джиновый коктейль с малиновым сиропом и бархатной пенкой.": "Элегантный жабий коктейль с сиропом из мошек и бархатной слизью.",
+
+            "Базилик Смэш": "Зеленый Ква-Смэш", 
+            "Basil Smash": "Swamp Smash",
+            "Взрывной вкус свежего базилика в сочетании с можжевеловым джином и лимоном.": "Взрывной вкус свежих водорослей в сочетании с джином и лягушкой.",
+
+            "Золото Шале": "Ква-Золото Болота", 
+            "Premium Beer Reserve": "Premium Swamp Reserve",
+            "Божественный нектар с насыщенным солодовым телом и благородным ароматом.": "Божественная жижа с насыщенным телом жука и ароматом болота.",
+
+            "Райская машина": "Ква-мобиль мечты", 
+            "The Absolute King of Roads": "King of Swamps",
+            "Вершина эволюции автопрома. Geely Coolray — это шнейне!": "Вершина эволюции головастиков. Geely Coolray — это КВА!"
+        };
+
+        function applySpecialLanguage(mode) {
+            shneineMode = (mode === 'shneine');
+            toadMode = (mode === 'toad');
+            const toggleBtn = document.getElementById('shneineToggleBtn');
+            
+            // Selector now includes descriptions, info-values, and list items
+            const elementsToTranslate = document.querySelectorAll('h1, .tagline-appear, .info-label, .info-value, .nav-button, .cocktail-name, .eng, .ing-label, .ing-list li, .tag, .btn-text, .footer-main, .description');
+
+            if (toadMode) {
+                elementsToTranslate.forEach(el => {
+                    if (!el.dataset.orig) el.dataset.orig = el.innerText;
+                    const txt = el.dataset.orig.trim();
+                    // Direct lookup or checks if key is contained (for complex strings if needed, but exact match preferred here)
+                    if (toadDictionary[txt]) {
+                        el.innerText = toadDictionary[txt];
+                    }
+                });
+            } else if (shneineMode) {
+                document.querySelectorAll('.cocktail-name, .description').forEach(el => {
+                    if (!el.dataset.orig) el.dataset.orig = el.innerText;
+                    if (shneineTexts[el.dataset.orig]) el.innerText = shneineTexts[el.dataset.orig];
+                });
+            } else {
+                elementsToTranslate.forEach(el => {
+                    if (el.dataset.orig) el.innerText = el.dataset.orig;
+                });
+            }
+            toggleBtn.innerText = shneineMode ? "Выкл. Шнейне" : "Вкл. Шнейне";
+        }
+
+        function toggleShneineMode() {
+            if (shneineMode) applySpecialLanguage('normal');
+            else applySpecialLanguage('shneine');
+        }
+
+        function checkSecretMenu() {
+            const secretBeer = document.getElementById('secretBeerBlock');
+            const secretCar = document.getElementById('secretCarBlock');
+            const toggleBtn = document.getElementById('shneineToggleBtn');
+            const pashaEgg = document.getElementById('pashaEgg');
+            const lizaTrigger = document.getElementById('lizaTrigger');
+            
+            if (guestSelect.selectedIndex <= 0) return;
+            const selectedText = guestSelect.options[guestSelect.selectedIndex].text.toUpperCase();
+
+            const isSergey = selectedText.includes('СЕРГЕЙ');
+            const isIlyaGU = selectedText.includes('ИЛЬЯ ГУ');
+            const isKostya = selectedText.includes('КОСТЯ');
+            const isDasha = selectedText.includes('ДАША');
+            const isAG = selectedText.includes('АЛЕКСАНДР ГРИГОРЬЕВИЧ');
+            const isPasha = selectedText.includes('ПАША');
+            const isLiza = selectedText.includes('ЛИЗА');
+
+            secretBeer.style.display = isSergey ? 'flex' : 'none';
+            if (isSergey) setTimeout(() => secretBeer.style.opacity = "1", 10);
+            secretCar.style.display = isIlyaGU ? 'flex' : 'none';
+            if (isIlyaGU) setTimeout(() => secretCar.style.opacity = "1", 10);
+            
+            toggleBtn.style.display = isAG ? 'block' : 'none';
+            pashaEgg.style.display = isPasha ? 'inline-block' : 'none';
+            lizaTrigger.style.display = isLiza ? 'block' : 'none';
+            
+            if (isKostya) applySpecialLanguage('shneine');
+            else if (isDasha) applySpecialLanguage('toad');
+            else applySpecialLanguage('normal');
+        }
+
+        guestSelect.addEventListener('change', (e) => {
+            localStorage.setItem('shalle_guest', e.target.value);
+            checkSecretMenu();
+        });
+
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('shalle_guest');
+            if (saved) { guestSelect.value = saved; checkSecretMenu(); }
+            ScrollReveal().reveal('.item:not(#secretBeerBlock):not(#secretCarBlock)', { delay: 150, duration: 1000, opacity: 0, distance: '30px', interval: 150 });
+            checkSticky();
+        });
+
+        function checkSticky() {
+            const bar = document.getElementById('stickyBar');
+            if (window.scrollY > 100) bar.classList.add('is-sticky');
+            else bar.classList.remove('is-sticky');
+        }
+        window.addEventListener('scroll', checkSticky);
+
+        function updateTimer() {
+            const startTime = new Date('February 7, 2026 14:30:00').getTime();
+            const now = new Date().getTime();
+            const timerElement = document.getElementById('timer');
+            if (now < startTime) {
+                const diff = startTime - now;
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                timerElement.innerHTML = `До начала: <span class="silver-num">${d}</span>д <span class="silver-num">${h}</span>ч <span class="silver-num">${m}</span>м`;
+            } else { timerElement.innerText = "Мероприятие в разгаре!"; }
+        }
+        setInterval(updateTimer, 1000); updateTimer();
+
+        async function sendOrder(cocktail, btn) {
+            const guestValue = guestSelect.value;
+            if (!guestValue) { alert("Сначала выберите ваше имя!"); return; }
+            const [guestId, guestName] = guestValue.split('|');
+            const progress = btn.querySelector('.btn-progress');
+            const btnText = btn.querySelector('.btn-text');
+            const notif = document.getElementById('notification');
+
+            if (cocktail === 'Geely Coolray') {
+                carAttempts++;
+                if (carAttempts === 1) {
+                    notif.innerHTML = "🍸 Заказ принят. Бармен уже в деле!";
+                    notif.classList.add('show');
+                    setTimeout(() => { notif.innerHTML = "Что-то пошло не так. Повторите заказ!"; notif.classList.add('error'); }, 1500);
+                    setTimeout(() => { notif.classList.remove('show'); setTimeout(() => notif.classList.remove('error'), 500); }, 5000);
+                } else { window.open('https://www.youtube.com/watch?v=GekqQHzwWmM', '_blank'); carAttempts = 0; }
+                return;
+            }
+
+            if (cocktail === 'Пиво Золото Шале') {
+                notif.innerHTML = "В ЗАКАЗЕ ОТКАЗАНО!!!<br>В холодильнике сам возьмешь.";
+                notif.classList.add('show', 'error');
+                setTimeout(() => { notif.classList.remove('show'); setTimeout(() => notif.classList.remove('error'), 500); }, 5000);
+                return;
+            }
+
+            if (navigator.vibrate) navigator.vibrate(40);
+            btn.classList.add('loading');
+            btnText.innerText = "ОТПРАВЛЯЕМ...";
+            progress.style.width = "100%";
+
+            const scriptUrl = "https://script.google.com/macros/s/AKfycby0Db2xZyaFpTWc2xYoYy0UErmM0y5afQs5FJgFeX1v-FMowC0le6JWBFJ_tVUbYfBT/exec";
+            fetch(`${scriptUrl}?cocktail=${encodeURIComponent(cocktail)}&name=${encodeURIComponent(guestName)}&guestId=${guestId}`, { mode: 'no-cors' });
+            
+            setTimeout(() => {
+                notif.innerHTML = "🍸 Заказ принят. Бармен уже в деле!";
+                notif.classList.add('show');
+                setTimeout(() => notif.classList.remove('show'), 4000);
+                btnText.innerText = "ГОТОВО";
+                setTimeout(() => {
+                    btn.classList.remove('loading');
+                    progress.style.width = "0%";
+                    btnText.innerText = "ЗАКАЗАТЬ ЕЩЕ";
+                    if(cocktail === 'Порнозвезда') toggleLizaModal(false);
+                }, 2000);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
