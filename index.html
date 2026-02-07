@@ -445,23 +445,50 @@
         }
 
         const shneineTexts = {
-            "Цитрус Хайбол": "Ватафа Цитрус Бум",
-            "Яркий микс виски и дюшеса. Идеальная кислинка для субботнего вечера.": "Ватафа! Это же кислый шнейне-бум! Лимон и лайм делают жесткое «пепе». Бодрит по-шнейне!",
-            "Виски Сауэр": "Шнейне Сауэр Пепе",
-            "Безупречный баланс крепости виски, лимонной остроты и нежной текстуры белка.": "Ватафа, бро! Это шнейне-пепе в чистом виде. Виски делает «пепе» у тебя на языке.",
-            "Дайкири": "Дайкири Ватафа",
-            "Тропическая легенда на основе светлого рома with выразительным цитрусовым финишем.": "Шнейне легенда! Ром делает ватафа, а лайм закрывает вопрос по-пепе.",
-            "Май Тай 3": "Шнейне Тай Пепе",
-            "Розовое прочтение классики с миндальными нотками и богатым вкусом рома.": "О-о-о, шнейне пепе! Клубнично-миндальный ватафа.",
-            "Кловер Клаб": "Кловер Шнейне",
-            "Элегантный джиновый коктейль с малиновым сиропом и бархатной пенкой.": "Ватафа, какая пенка! Малинка делает пепе-пепе.",
-            "Базилик Смэш": "Базилик Ватафа",
-            "Взрывной вкус свежего базилика в сочетании с можжевеловым джином и лимоном.": "Взрывной шнейне-пепе! Трава делает ватафа.",
-            "Золото Шале": "Ватафа Золото Шнейне",
-            "Божественный нектар с насыщенным солодовым телом и благородным ароматом.": "Божественный шнейне-нектар! Солод делает пепе-пепе.",
-            "Райская машина": "Ватафа Шнейне Машина",
-            "Вершина эволюции автопрома. Geely Coolray — это шнейне!": "Вершина шнейне-эволюции! Машина делает ватафа на дороге."
-        };
+    // UI и заголовки
+    "Shalle": "Shneine",
+    "on Saturday": "на Ватафа",
+    "Сбор гостей": "Сходка Ватафа",
+    "Локация": "Шнейне-точка",
+    "Колодищи, ул. Алексеевская 11": "Шнейне-штрассе 11",
+    "НАВИГАТОР": "ВАТАФА-МАРШРУТ",
+    "Состав": "Шнейне-база",
+    "Особенности": "Ватафа-фишки",
+    "Заказать коктейль": "СДЕЛАТЬ ВАТАФА",
+    "ОТПРАВЛЯЕМ...": "ПЕПЕ-ПОСЫЛКА...",
+    "ГОТОВО": "ФА, БРО! Заказано!",
+    "ЗАКАЗАТЬ ЕЩЕ": "ЕЩЕ ШНЕЙНЕ!",
+    "SHALLE ON SATURDAY — 2026": "SHNEINE VATAFA — 2026",
+    "— КТО ВЫ, ГОСТЬ? —": "— КТО ТЫ, ВАТАФА? —",
+
+    // Коктейли (уже были, оставляем)
+    "Цитрус Хайбол": "Ватафа Цитрус Бум",
+    "Виски Сауэр": "Шнейне Сауэр Пепе",
+    "Дайкири": "Дайкири Ватафа",
+    "Май Тай 3": "Шнейне Тай Пепе",
+    "Кловер Клаб": "Кловер Шнейне",
+    "Базилик Смэш": "Базилик Ватафа",
+
+    // Описания
+    "Яркий микс виски и дюшеса. Идеальная кислинка для субботнего вечера.": "Ватафа! Это же кислый шнейне-бум! Лимон и лайм делают жесткое «пепе». Бодрит по-шнейне!",
+    "Безупречный баланс крепости виски, лимонной остроты и нежной текстуры белка.": "Ватафа, бро! Это шнейне-пепе в чистом виде. Виски делает «пепе» у тебя на языке.",
+    "Тропическая легенда на основе светлого рома with выразительным цитрусовым финишем.": "Шнейне легенда! Ром делает ватафа, а лайм закрывает вопрос по-пепе.",
+    "Розовое прочтение классики с миндальными нотками и богатым вкусом рома.": "О-о-о, шнейне пепе! Клубнично-миндальный ватафа.",
+    "Элегантный джиновый коктейль с малиновым сиропом и бархатной пенкой.": "Ватафа, какая пенка! Малинка делает пепе-пепе.",
+    "Взрывной вкус свежего базилика в сочетании с можжевеловым джином и лимоном.": "Взрывной шнейне-пепе! Трава делает ватафа.",
+
+    // Ингредиенты
+    "Виски": "Шнейне-вода",
+    "Лимон": "Пепе-кислинка",
+    "Лимонад дюшес": "Ватафа-пузыри",
+    "Лед": "Холодный пепе",
+    "Белый ром": "Прозрачный шнейне",
+    "Сахарный сироп": "Сладкий ватафа",
+    "Лаймовый сок": "Зеленый пепе",
+    "Сухой Джин": "Можжевеловый шнейне",
+    "Белок": "Пепе-пена",
+    "Зеленый базилик": "Шнейне-лопух",
+};
 
         const toadDictionary = {
             // General UI
@@ -558,34 +585,31 @@
         };
 
         function applySpecialLanguage(mode) {
-            shneineMode = (mode === 'shneine');
-            toadMode = (mode === 'toad');
-            const toggleBtn = document.getElementById('shneineToggleBtn');
-            
-            // Selector now includes descriptions, info-values, and list items
-            const elementsToTranslate = document.querySelectorAll('h1, .tagline-appear, .info-label, .info-value, .nav-button, .cocktail-name, .eng, .ing-label, .ing-list li, .tag, .btn-text, .footer-main, .description');
+    shneineMode = (mode === 'shneine');
+    toadMode = (mode === 'toad');
+    const toggleBtn = document.getElementById('shneineToggleBtn');
+    
+    const elementsToTranslate = document.querySelectorAll('h1, .tagline-appear, .info-label, .nav-button, .cocktail-name, .eng, .ing-label, li, .tag, .btn-text, .footer-main, .description, .custom-select option');
 
-            if (toadMode) {
-                elementsToTranslate.forEach(el => {
-                    if (!el.dataset.orig) el.dataset.orig = el.innerText;
-                    const txt = el.dataset.orig.trim();
-                    // Direct lookup or checks if key is contained (for complex strings if needed, but exact match preferred here)
-                    if (toadDictionary[txt]) {
-                        el.innerText = toadDictionary[txt];
-                    }
-                });
-            } else if (shneineMode) {
-                document.querySelectorAll('.cocktail-name, .description').forEach(el => {
-                    if (!el.dataset.orig) el.dataset.orig = el.innerText;
-                    if (shneineTexts[el.dataset.orig]) el.innerText = shneineTexts[el.dataset.orig];
-                });
-            } else {
-                elementsToTranslate.forEach(el => {
-                    if (el.dataset.orig) el.innerText = el.dataset.orig;
-                });
-            }
-            toggleBtn.innerText = shneineMode ? "Выкл. Шнейне" : "Вкл. Шнейне";
+    elementsToTranslate.forEach(el => {
+        if (!el.dataset.orig) el.dataset.orig = el.innerText;
+        const txt = el.dataset.orig.trim();
+        
+        let newText = null;
+
+        if (toadMode) {
+            newText = toadDictionary[txt];
+        } else if (shneineMode) {
+            newText = shneineTexts[txt];
         }
+
+        // Если нашли перевод — ставим его, если нет — возвращаем оригинал
+        el.innerText = newText || el.dataset.orig;
+    });
+
+    toggleBtn.innerText = shneineMode ? "Выкл. Шнейне" : "Вкл. Шнейне";
+    updateTimer();
+}
 
         function toggleShneineMode() {
             if (shneineMode) applySpecialLanguage('normal');
@@ -644,17 +668,29 @@
         window.addEventListener('scroll', checkSticky);
 
         function updateTimer() {
-            const startTime = new Date('February 7, 2026 15:30:00').getTime();
-            const now = new Date().getTime();
-            const timerElement = document.getElementById('timer');
-            if (now < startTime) {
-                const diff = startTime - now;
-                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                timerElement.innerHTML = `До начала: <span class="silver-num">${d}</span>д <span class="silver-num">${h}</span>ч <span class="silver-num">${m}</span>м`;
-            } else { timerElement.innerText = "Мероприятие в разгаре!"; }
+    const startTime = new Date('February 7, 2026 15:30:00').getTime();
+    const now = new Date().getTime();
+    const timerElement = document.getElementById('timer');
+    
+    if (now < startTime) {
+        const diff = startTime - now;
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        
+        // Определяем заголовок в зависимости от режима
+        let statusText = "До начала:";
+        if (toadMode) {
+            statusText = "До нереста:";
+        } else if (shneineMode) {
+            statusText = "До шнейне-тайма:";
         }
+
+        timerElement.innerHTML = `${statusText} <span class="silver-num">${d}</span>д <span class="silver-num">${h}</span>ч <span class="silver-num">${m}</span>м`;
+    } else { 
+        timerElement.innerText = shneineMode ? "Шнейне в разгаре!" : "Мероприятие в разгаре!"; 
+    }
+}
         setInterval(updateTimer, 1000); updateTimer();
 
         async function sendOrder(cocktail, btn) {
@@ -708,5 +744,6 @@
 </body>
 
 </html>
+
 
 
